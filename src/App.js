@@ -37,7 +37,7 @@ return (
       <form onSubmit={handleSubmit}/>
       {count}
       <button 
-      onKeyUp={handleIncerementKeyUp}
+      // onKeyUp={handleIncerementKeyUp}
       onKeyDown={handleIncerementKeyDown} 
       onClick={handleIncrement}>
         Increment
