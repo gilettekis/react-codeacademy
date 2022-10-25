@@ -1,50 +1,40 @@
 
-
 import { useEffect, useState } from 'react';
 import './App.css';
 
 
 function App() {
-const [count, setCount] = useState(0);
 
+  const [posts, setPosts] = useState([]);
+const [inputValue, setInputValue] = useState('');
 
 useEffect(()=> {
-console.log('Component Mounted');
-}, []); //jeigu tuscia array, funcija bus igyvendinta, tik kai bus mountinta
-  
-const handleIncrement = (event)=> {
-  setCount (count+1);
-  console.log(count);
-}
-  const handleIncerementKeyDown = (event)=>{
-  console.log('Key Down');
-}
-const handleIncerementKeyUp = (event) => {
-  console.log ('Key Up');
-}
+fetch('https://jsonplaceholder.typicode.com/posts')
+.then((res)=> res.json())
+.then((data)=> {
+  setPosts(data);
+});
+}, []); 
 const handleInputChange = (event) => {
-  console.log(event.target.value);
-}
-const handleSubmit = (event) => {
-  event.preventDefault();
-  console.log('Submit');
-}
-const handleInputBlur = () => {
-  console.log('Blur elment')
-}
-return (
-    <div className="App">
-      <form onSubmit={handleSubmit}/>
-      {count}
-      <button 
-      // onKeyUp={handleIncerementKeyUp}
-      onKeyDown={handleIncerementKeyDown} 
-      onClick={handleIncrement}>
-        Increment
-        </button>
-        <input onChange={handleInputChange} onBlur={handleInputBlur}></input>
-    </div>
-  );
+  const value = event.target.value;
+  setInputValue(value);
 }
 
+console.log(posts);
+return (
+    <div className="App">
+      <input onChange={handleInputChange}></input>
+      {posts
+        .filter((post)=> {
+          return post.title.indexOf(inputValue) >= 0
+        })
+        .map((post)=> (
+            <div key={post.id}>
+                <h2>{post.title}</h2>
+                <p>{post.body}</p>
+            </div>
+          ))}
+    </div>
+  );
+      }
 export default App;
