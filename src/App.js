@@ -1,40 +1,44 @@
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+// import {Route} from './Route/Route';
 
-import { useEffect, useState } from 'react';
+// import { HomePage } from './HomePage/HomePage';
+// import{ContactsPage} from './ContactsPage/ContactsPage';  taikant lazyloading kitoks importas
+
 import './App.css';
 
-
+const HomePage =React.lazy(()=> import ('./HomePage/HomePage'));
+const ContactsPage=React.lazy(()=> import('./ContactsPage/ContactsPage'));
+const AboutPage=React.lazy(()=> import('./AboutPage/AboutPage'));
 function App() {
 
-  const [posts, setPosts] = useState([]);
-const [inputValue, setInputValue] = useState('');
-
-useEffect(()=> {
-fetch('https://jsonplaceholder.typicode.com/posts')
-.then((res)=> res.json())
-.then((data)=> {
-  setPosts(data);
-});
-}, []); 
-const handleInputChange = (event) => {
-  const value = event.target.value;
-  setInputValue(value);
-}
-
-console.log(posts);
 return (
     <div className="App">
-      <input onChange={handleInputChange}></input>
-      {posts
-        .filter((post)=> {
-          return post.title.indexOf(inputValue) >= 0
-        })
-        .map((post)=> (
-            <div key={post.id}>
-                <h2>{post.title}</h2>
-                <p>{post.body}</p>
-            </div>
-          ))}
+      <Link to="/"> Home Page</Link>
+      <Link to="/contacts"> Contacts Page</Link>
+      <Link to="/about">  About Page</Link>
+     
+      <Routes>
+        <Route path = "/" element ={
+          <React.Suspense fallback={<div>Loading...</div>}>
+          <HomePage/>
+        </React.Suspense>
+        }/>
+        <Route path="/contacts" element={
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <ContactsPage />
+          </React.Suspense>
+        
+        }/>
+        <Route path="/about" element={
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <AboutPage />
+          </React.Suspense>
+        
+        }/>
+      </Routes>
     </div>
+    
   );
       }
 export default App;
